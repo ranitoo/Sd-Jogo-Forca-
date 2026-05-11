@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MercaDito - Loja Online</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        header {
+            background-color:#28a745;;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        .slideshow-container img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .category-section {
+            margin: 3rem 0;
+        }
+        .category-title {
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        .product-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 1rem;
+            padding-bottom: 1rem;
+        }
+        .product-card {
+            flex: 0 0 auto;
+            width: 200px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            scroll-snap-align: start;
+            transition: transform 0.2s;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .product-card .card-body {
+            text-align: center;
+            padding: 0.8rem;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .cart-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Botão Carrinho com contador dinâmico -->
+<a href="/carrinho" class="cart-button">
+    Carrinho (<span id="cart-count" th:text="${cartCount}">0</span>)
+</a>
+
+<header>
+    <h1>MercaDito</h1>
+    <p>Bem-vindo à sua loja online de produtos alimentares!</p>
+    <!-- Exemplo de mostrar nome do usuário se estiver logado -->
+    <p th:if="${user != null}">Olá, <span th:text="${user.nome}">Usuário</span>!</p>
+</header>
+
+<div class="container">
+
+    <!-- Slideshow estático -->
+    <div class="slideshow-container mb-4">
+    </div>
+
+    <!-- Categorias com produtos dinâmicos -->
+    <div th:each="categoria : ${categorias}" class="category-section">
+        <h4 class="category-title" th:text="${categoria.nome}">Categoria</h4>
+        <div class="product-scroll">
+            <div class="product-card" th:each="produto : ${categoria.produtos}">
+                <!---<img th:src="${produto.imagemUrl}" alt="Imagem do Produto" /> -->
+                <div class="card-body">
+                    <h6 th:text="${produto.nome}">Nome do Produto</h6>
+                    <p class="text-success" th:text="'€' + ${produto.preco}">€0,00</p>
+                    <button class="btn btn-sm btn-success"
+                        th:attr="onclick=|addToCart(${produto.id}, '${produto.nome}', ${produto.preco})|">
+                        Adicionar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>&copy; 2025 MercaDito. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+    // Função para adicionar produto ao carrinho via backend
+    function addToCart(produtoId, nome, preco) {
+        fetch('/carrinho/adicionar', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `produtoId=${produtoId}&quantidade=1`
+        }).then(response => {
+            if (response.ok) {
+                alert(`${nome} adicionado ao carrinho!`);
+                // Atualiza o contador de itens no carrinho
+                fetch('/carrinho/count').then(r => r.text()).then(count => {
+                    document.getElementById('cart-count').innerText = count;
+                });
+            } else {
+                alert('Erro ao adicionar o produto.');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel do Administrador</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        header {
+            background-color: #28a745;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .btn-success-custom {
+            background-color: #66bb6a;
+            border-color: #66bb6a;
+            color: white;
+        }
+        .btn-success-custom:hover {
+            background-color: #57a05b;
+            border-color: #57a05b;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>MercaDito</h1>
+    <p>Gestão Administrativa</p>
+</header>
+
+<div class="container mt-5 text-center">
+    <h2>Painel de Administração</h2>
+
+    <div class="mt-4">
+        <a th:href="@{/admin/produtos}" class="btn btn-success-custom btn-lg m-2">Adicionar Produtos</a>
+        <a th:href="@{/admin/novacategoria}" class="btn btn-success-custom btn-lg m-2">Adicionar Categorias</a>
+        <a th:href="@{/admin/estatisticas}" class="btn btn-success-custom btn-lg m-2">Ver Estatísticas</a>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 MercaDito. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Estatísticas da Loja</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        header {
+            background-color: #28a745;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+		
+		h1 {
+		    color:white;
+		}
+
+        h3 {
+            color: #343a40;
+        }
+
+        .chart-container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>MercaDito</h1>
+    <p>Estatísticas da Loja</p>
+</header>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 chart-container">
+            <h3 class="text-center">Melhores Clientes</h3>
+            <canvas id="melhoresClientesChart"></canvas>
+        </div>
+
+        <div class="col-md-6 chart-container">
+            <h3 class="text-center">Faturamento</h3>
+            <canvas id="faturamentoChart"></canvas>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto chart-container">
+            <h3 class="text-center">Top 5 Produtos Mais Vendidos</h3>
+            <canvas id="produtosMaisVendidosChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 MercaDito. Todos os direitos reservados.</p>
+</footer>
+
+<!-- Thymeleaf Script Variables -->
+<script th:inline="javascript">
+/*<![CDATA[*/
+    let nomesClientes = /*[[${nomesClientesJson}]]*/ '[]';
+    let valoresGastos = /*[[${valoresGastosJson}]]*/ '[]';
+    nomesClientes = JSON.parse(nomesClientes);
+    valoresGastos = JSON.parse(valoresGastos);
+
+    let faturadoDia = /*[[${faturadoDia}]]*/ 0;
+    let faturadoSemana = /*[[${faturadoSemana}]]*/ 0;
+    let faturadoMes = /*[[${faturadoMes}]]*/ 0;
+
+    let nomesProdutos = /*[[${nomesProdutosJson}]]*/ '[]';
+    let quantidadesVendidas = /*[[${quantidadesVendidasJson}]]*/ '[]';
+    nomesProdutos = JSON.parse(nomesProdutos);
+    quantidadesVendidas = JSON.parse(quantidadesVendidas);
+/*]]>*/
+</script>
+
+<!-- Chart.js Rendering -->
+<script>
+    new Chart(document.getElementById('melhoresClientesChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: nomesClientes,
+            datasets: [{
+                label: 'Valor Gasto (€)',
+                data: valoresGastos,
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    new Chart(document.getElementById('faturamentoChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: ['Hoje', 'Esta Semana', 'Este Mês'],
+            datasets: [{
+                label: 'Faturamento (€)',
+                data: [faturadoDia, faturadoSemana, faturadoMes],
+                backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: true,
+                tension: 0.2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    new Chart(document.getElementById('produtosMaisVendidosChart').getContext('2d'), {
+        type: 'pie',
+        data: {
+            labels: nomesProdutos,
+            datasets: [{
+                data: quantidadesVendidas,
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF'
+                ],
+                hoverOffset: 30
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'right' } }
+        }
+    });
+</script>
+
+</body>
+</html>

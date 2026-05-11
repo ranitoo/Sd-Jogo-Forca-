@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fatura</title>
+</head>
+<body>
+    <h1>Fatura</h1>
+
+    <p><strong>Data:</strong> <span th:text="${fatura.dataEmissao}"></span></p>
+    <p><strong>Método de Pagamento:</strong> <span th:text="${fatura.metodoPagamento}"></span></p>
+    <p><strong>Total:</strong> <span th:text="${fatura.valorTotal} + '€'"></span></p>
+
+    <hr>
+
+    <h2>Cliente</h2>
+    <p><strong>Nome:</strong> <span th:text="${venda.cliente.nome} + ' ' + ${venda.cliente.sobrenome}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${venda.cliente.email}"></span></p>
+
+    <hr>
+
+    <h2>Itens da Venda</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Preço Unitário</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item : ${itens}">
+                <td th:text="${item.produto.nome}"></td>
+                <td th:text="${item.quantidade}"></td>
+                <td th:text="${item.precoUnitario} + '€'"></td>
+                <td th:text="${item.subtotal} + '€'"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+    <a href="/">Voltar à loja</a>
+</body>
+</html>

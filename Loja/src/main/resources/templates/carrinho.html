@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrinho de Compras - MercaDito</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        header {
+            background-color: #28a745;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .container {
+            margin-top: 3rem;
+        }
+        .item {
+            border-bottom: 1px solid #ddd;
+            padding: 1rem 0;
+        }
+        .item:last-child {
+            border-bottom: none;
+        }
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.7rem;
+            border-radius: 5px;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .btn-success-custom {
+            background-color: #66bb6a;
+            border-color: #66bb6a;
+            color: white;
+        }
+        .btn-success-custom:hover {
+            background-color: #57a05b;
+            border-color: #57a05b;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>MercaDito</h1>
+    <p>O seu carrinho de compras</p>
+</header>
+
+<div class="container">
+    <h2 class="mb-4">Carrinho de Compras</h2>
+    
+    <div th:if="${itens.isEmpty()}">
+        <p>O seu carrinho está vazio.</p>
+    </div>
+    
+    <div th:unless="${itens.isEmpty()}">
+        <div th:each="item : ${itens}" class="item row align-items-center">
+            <div class="col-md-6"><strong th:text="${item.produto.nome}">Nome Produto</strong></div>
+            <div class="col-md-2" th:text="${item.quantidade} + 'x'">1x</div>
+            <div class="col-md-2">€<span th:text="${item.produto.preco}">0.00</span></div>
+            <div class="col-md-2">
+                <button class="btn btn-warning btn-sm mr-2" 
+                    th:onclick="'removerUmProduto(' + ${item.produto.id} + ')'">Remover 1</button>
+                <button class="btn btn-danger btn-sm" 
+                    th:onclick="'removerTodosProdutos(' + ${item.produto.id} + ')'">Remover Todos</button>
+            </div>
+        </div>
+        <div class="total mt-4">
+            Total: €<span th:text="${total}">0.00</span>
+        </div>
+    </div>
+    
+    <form action="/carrinho/pagar" method="post" style="margin-top: 1rem;">
+        <button type="submit" class="btn btn-success-custom">Pagar</button>
+    </form>
+    
+    <a href="/inicio" class="btn btn-secondary mt-3">Continuar Compras</a>
+</div>
+
+<footer>
+    <p>&copy; 2025 MercaDito. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+    async function removerUmProduto(produtoId) {
+        await fetch('/carrinho/diminuir', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({ produtoId })
+        });
+        location.reload();
+    }
+
+    async function removerTodosProdutos(produtoId) {
+        await fetch('/carrinho/remover', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({ produtoId })
+        });
+        location.reload();
+    }
+</script>
+
+</body>
+</html>

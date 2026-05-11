@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Produto</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        header {
+            background-color: #28a745;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        h2 {
+            color: #343a40;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-success-custom {
+            background-color: #66bb6a;
+            border-color: #66bb6a;
+			color: white;
+        }
+
+        .btn-success-custom:hover {
+            background-color: #57a05b;
+            border-color: #57a05b;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>MercaDito</h1>
+    <p>Gestão de Produtos</p>
+</header>
+
+<div class="container mt-5">
+    <h2>Inserir Novo Produto</h2>
+    <form th:action="@{/admin/produtos}" method="post" th:object="${produto}">
+        <div class="form-group">
+            <label>Nome:</label>
+            <input type="text" th:field="*{nome}" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label>Descrição:</label>
+            <input type="text" th:field="*{descricao}" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label>Preço:</label>
+            <input type="number" step="0.01" th:field="*{preco}" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label>Stock:</label>
+            <input type="number" th:field="*{stock}" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label>Categoria:</label>
+            <select th:field="*{categoria.id}" class="form-control" required>
+                <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nome}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success-custom">Adicionar Produto</button>
+    </form>
+</div>
+
+<footer>
+    <p>&copy; 2025 MercaDito. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>
